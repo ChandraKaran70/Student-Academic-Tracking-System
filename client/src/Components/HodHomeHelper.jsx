@@ -50,9 +50,9 @@ const HodHome = () => {
                                 <li className="nav-item">
                                     <button type="button" className="btn"><Link to="/hod/students"><li>STUDENTS</li></Link></button>
                                 </li>
-                                <li className="nav-item">
+                                {/* <li className="nav-item">
                                     <button type="button" className="btn"><Link to="/hod/updatePassword"><li>UPDATE PASSWORD</li></Link></button>
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
                         <div>

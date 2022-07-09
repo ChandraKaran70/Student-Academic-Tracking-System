@@ -85,6 +85,8 @@ import FacultySelectStudents from './Pages/FacultySelectStudents';
 import FacultyMarkAttendance from './Pages/FacultyMarkAttendance';
 import HodGetStudents from './Pages/HodGetStudents';
 import MarksUpload from './Pages/FacultyMarksUpload';
+import AdminAssignFaculty from './Pages/Admin/AdminAssignFaculty';
+import ParentUpdateProfile from './Pages/Parent/ParentUpdateProfile';
 
 if (window.localStorage.facultyJwtToken) {
   setAuthToken(localStorage.facultyJwtToken);
@@ -164,8 +166,10 @@ function App() {
           {/* <Route exact path='/hod/SectionAttendance' component={SectionAttendance} /> */}
           <Route exact path='/hod/selectSection/sectionAttendance' component={SectionAttendance} />
           <Route exact path='/hod/selectTest' component={TestSelect} />
+          <Route exact path='/hod/updateProfile' component={FacultyUpdateProfile} />
           <Route exact path='/hod/selectTest/sectionPerformance' component={SectionMarks} />
           <Route exact path='/parent/checkAttendance' component={AttendanceParent} />
+          <Route exact path='/parent/updateProfile' component={ParentUpdateProfile} />
           {/* <Route exact path='/parent/checkAttendance/childAttendance' component={ChildAttendancePage} /> */}
           <Route exact path='/parent/checkAttendance/:registrationNumber' component={ChildAttendancePage} />
           <Route exact path='/parent/getMarks' component={MarksParent} />
@@ -173,6 +177,7 @@ function App() {
           <Route exact path='/parent/getMarks/:registrationNumber' component={ChildTestPerformance}/>
           <Route exact path="/admin/addStudent" component={AdminAddStudent} />
           <Route exact path="/admin/addFaculty"><AdminAddFaculty isHOD={false}/></Route>
+          <Route exact path="/admin/assignFaculty" component={AdminAssignFaculty}/>
           <Route exact path="/admin/addHOD"><AdminAddFaculty isHOD={true}/></Route>
           <Route exact path="/admin/addParent" component={AdminAddParent} />
           <Route exact path="/admin/addTimetable" component={AdminAddTimetable}/>

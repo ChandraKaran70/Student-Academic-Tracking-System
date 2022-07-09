@@ -109,11 +109,13 @@ module.exports = {
            
             if (subjectList.length === 0) {
                 errors.department = 'No Subject found in given department';
+                console.log("err: no sub in department")
                 return res.status(404).json(errors);
             }
             const students = await Student.find({ department, year, section })
             if (students.length === 0) {
                 errors.department = 'No Student found'
+                console.log("err: no student in department")
                 return res.status(404).json(errors);
             }
             res.status(200).json({
@@ -204,7 +206,11 @@ module.exports = {
                 attendanceList.push(res)
                 }
                 console.log("att list ",attendanceList)
-               await res.status(200).json({result:attendanceList})
+               await res.status(200).json({result:{
+                   department,
+                   year,
+                   section,
+                   attendanceList}})
         }
         catch (err) {
             console.log("error in faculty fetchStudents", err.message)
@@ -299,9 +305,6 @@ module.exports = {
             var filteredArr = allStudents.filter(function (item) {
                 return selectedStudents.indexOf(item.id) === -1
             });
-
-            console.log("hi befr filtered array",filteredArr.length)
-            console.log(filteredArr)
             
             for (let i = 0; i < filteredArr.length; i++) {
                 const pre = await Attendence.findOne({ student: filteredArr[i]._id, subject: sub._id })
@@ -330,17 +333,17 @@ module.exports = {
                 console.log("absent subAtt",subjectAttendance)
 
                 console.log("hii in filtererd arr")
-                // const absentStudentEmail = filteredArr[i].email 
+                const absentStudentEmail = filteredArr[i].email 
                
-                // const attendance = await Attendence.findOne( {student: filteredArr[i]._id, subject: sub._id })
-                // const attendanceData = {
-                //     attendanceStatus:"absent",
-                //     subjectName:subjectName,
-                //     lecturesAttended:attendance.lectureAttended,
-                //     totalLecturesByFaculty: attendance.totalLecturesByFaculty
-                // }
-                // console.log("student is",absentStudentEmail)
-                // await sendAttendanceMail(absentStudentEmail,attendanceData,"OTP")
+                const attendance = await Attendence.findOne( {student: filteredArr[i]._id, subject: sub._id })
+                const attendanceData = {
+                    attendanceStatus:"absent",
+                    subjectName:subjectName,
+                    lecturesAttended:attendance.lectureAttended,
+                    totalLecturesByFaculty: attendance.totalLecturesByFaculty
+                }
+                console.log("student is",absentStudentEmail)
+                await sendAttendanceMail(absentStudentEmail,attendanceData,"OTP")
                 
                 //smuskbesbzwhnzyq
                
@@ -374,17 +377,17 @@ module.exports = {
                 await subjectAttendance.save()
                 console.log("present subAtt",subjectAttendance)
 
-                // const presentStudent = await Student.findOne({_id:selectedStudents[a]})
-                // const presentStudentEmail = presentStudent.email
-                // const attendance = await Attendence.findOne( {student: selectedStudents[a], subject: sub._id })
-                // const attendanceData = {
-                //     attendanceStatus:"present",
-                //     subjectName:subjectName,
-                //     lecturesAttended:attendance.lectureAttended,
-                //     totalLecturesByFaculty: attendance.totalLecturesByFaculty
-                // }
-                // console.log("student is",presentStudentEmail)
-                // await sendAttendanceMail(presentStudentEmail,attendanceData,"OTP")
+                const presentStudent = await Student.findOne({_id:selectedStudents[a]})
+                const presentStudentEmail = presentStudent.email
+                const attendance = await Attendence.findOne( {student: selectedStudents[a], subject: sub._id })
+                const attendanceData = {
+                    attendanceStatus:"present",
+                    subjectName:subjectName,
+                    lecturesAttended:attendance.lectureAttended,
+                    totalLecturesByFaculty: attendance.totalLecturesByFaculty
+                }
+                console.log("student is",presentStudentEmail)
+                await sendAttendanceMail(presentStudentEmail,attendanceData,"OTP")
                
             }
             res.status(200).json({ message: "done" })
@@ -397,8 +400,6 @@ module.exports = {
     uploadMarks: async (req, res, next) => {
         try {
             const { errors, isValid } = validateFacultyUploadMarks(req.body);
-
-            // Check Validation
             if (!isValid) {
                 return res.status(400).json(errors);
             }

@@ -10,10 +10,14 @@ const initialState = {
     adminAddStudentFlag: false,
     adminAddAdminFlag: false,
     adminAddSubjectFlag: false,
+    adminAssignFacultyFlag:false,
+    adminFetchedSubjectFacultyHelper:false,
     allSubject: {},
     allFaculty: [],
     allStudent: [],
     allParent:[],
+    facultyList:[],
+    subjectList:[],
     allSubject: [],
     timetables:[]
 }
@@ -61,6 +65,12 @@ const adminReducer = (state = initialState, action) => {
                 adminAddSubjectFlag: action.payload
             }
         }
+        case "ADMIN_ASSIGN_FACULTY_FLAG": {
+            return {
+                ...state,
+                adminAssignFacultyFlag: action.payload
+            }
+        }
         case "ADMIN_ADD_ADMIN_FLAG": {
             return {
                 ...state,
@@ -71,6 +81,14 @@ const adminReducer = (state = initialState, action) => {
             return {
                 ...state,
                 allFaculty: action.payload
+            }
+        }
+        case "GET_ALL_FACULTY_AND_SUBJECTS": {
+            return {
+                ...state,
+                facultyList: action.faculties,
+                subjectList: action.subjects,
+                adminFetchedSubjectFacultyHelper:true
             }
         }
         case "ADMIN_ADD_TIMETABLE": {

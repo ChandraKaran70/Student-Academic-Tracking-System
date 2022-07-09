@@ -15,9 +15,6 @@ const SectionAttendance = (props) => {
 
     useEffect(()=>{
         console.log("prps are",props)
-        // let department = 'C.S.E'
-        // let year = 4
-        // let section = 'A'
         console.log("passed details are",department,year,section)
         dispatch(hodFetchStudents(department,year,section))
     },[])
@@ -32,6 +29,8 @@ const SectionAttendance = (props) => {
              {store.faculty.hodFetchedAttendanceFlag?<div className="container">
                     <div className="row mt-5">
                         <div className="col-md-12 m-auto">
+                        <h5 style={{color:'green'}}> Attendance Report</h5> <br/>
+                            <h5>Year-{store.faculty.hodFetchedAttendance.year}  Semester-{store.faculty.hodFetchedAttendance.semester}  Section-{store.faculty.hodFetchedAttendance.section}</h5><br/><br/>
                             <table className="table border">
                                 <thead>
                                     <tr>
@@ -39,7 +38,7 @@ const SectionAttendance = (props) => {
                                         <th scope="col">Registration Number</th>
                                         <th scope="col">Student Name</th>
                                         {     
-                                           store.faculty.hodFetchedAttendance[0].subAtt.map(subjectAtt => (
+                                           store.faculty.hodFetchedAttendance.attendanceList[0].subAtt.map(subjectAtt => (
                                             <th>{subjectAtt.subjectName}(in %)</th>
                                            )   
                                            )
@@ -50,7 +49,7 @@ const SectionAttendance = (props) => {
                                 </thead>
                                 <tbody>
                                     {
-                                        store.faculty.hodFetchedAttendance.map((res, index) =>
+                                        store.faculty.hodFetchedAttendance.attendanceList.map((res, index) =>
                                             <tr key={index}>
                                                 <th scope="row">{index + 1}</th>
                                                 <td>{res.studentRegNumber}</td>
@@ -71,7 +70,7 @@ const SectionAttendance = (props) => {
                             
                         </div>
                     </div>
-                </div>:<></>}
+                </div>:<h2 style={{marginLeft:"450px",marginTop:"250px"}}>Loading...</h2>}
             </> : (history.push('/'))}
            
             

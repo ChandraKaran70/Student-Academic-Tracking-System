@@ -16,6 +16,7 @@ const FacultyUpdateProfile = () => {
     const [aadharCard, setAadharCard] = useState('')
     const [avatar, setAvatar] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    
     const imagehandler = (e) => {
         if (e.target.files && e.target.files[0]) {
             let img = e.target.files[0]

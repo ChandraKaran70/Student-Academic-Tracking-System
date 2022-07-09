@@ -13,12 +13,15 @@ const AdminGetAllSubjects = () => {
     const [error, setError] = useState({})
     const [isLoading, setIsLoading] = useState(false)
     const history = useHistory()
+    const [flag,setFlag] = useState(false)
 
 
     const formHandler = (e) => {
         e.preventDefault()
         setIsLoading(true)
         dispatch(adminGetAllSubject({ department, year }))
+        setFlag(true)
+        setIsLoading(false)        
 
     }
     useEffect(() => {
@@ -66,6 +69,8 @@ const AdminGetAllSubjects = () => {
                                         </select>
                                         {error.year && (<div className="invalid-feedback">{error.year}</div>)}
                                     </div>
+                                    <button type="submit" className="btn btn-info btn-block  ">Search</button>
+                                    <br/>
                                     <div class="row justify-content-center">
                                         <div class="col-md-1">
                                             {
@@ -75,7 +80,6 @@ const AdminGetAllSubjects = () => {
                                             }
                                         </div>
                                     </div>
-                                    {!isLoading && <button type="submit" className="btn btn-info btn-block  ">Search</button>}
                                    
                                 </form>
 
@@ -83,7 +87,7 @@ const AdminGetAllSubjects = () => {
                             </div>
                             <div className="col-md-8">
 
-                                {store.admin.allSubject.length !== 0 && <table className="table border">
+                                {store.admin.allSubject.length !== 0 ? <table className="table border">
                                     <thead>
                                         <tr>
                                             <th scope="col">S.No</th>
@@ -104,7 +108,8 @@ const AdminGetAllSubjects = () => {
                                             )
                                         }
                                     </tbody>
-                                </table>}
+                                </table>
+                                : flag? <h2 style={{color:"red",marginLeft:"250px",marginTop:"100px"}}>No details found</h2>:<></>}
 
                             </div>
                         </div>

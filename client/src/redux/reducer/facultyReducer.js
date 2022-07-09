@@ -12,7 +12,7 @@ const initialState = {
     allSubjectCodeList: [],
     fetchedStudents: [],
     fetchedStudentsHelper: true,
-    hodFetchedAttendance:[],
+    hodFetchedAttendance:{},
     hodFetchedAttendanceFlag:false,
     hodFetchedMarks:[],
     hodFetchedStudents:[],

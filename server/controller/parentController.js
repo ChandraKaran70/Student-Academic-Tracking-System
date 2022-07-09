@@ -78,25 +78,52 @@ module.exports = {
             console.log("reg num is",registrationNumber)
             const student = await Student.findOne({registrationNumber:registrationNumber})
             const studentId = student._id
+            let studentName = student.name
             console.log("student is",student)
             console.log("name is",student.name)
             const attendence = await Attendence.find({ student: studentId }).populate('subject')
             if (!attendence) {
                 res.status(400).json({ message: "Attendence not found" })
             }
-            res.status(200).json({
-                result: attendence.map(att => {
-                    let res = {};
-                    res.attendence = ((att.lectureAttended / att.totalLecturesByFaculty) * 100).toFixed(2)
-                    res.subjectCode = att.subject.subjectCode
-                    res.subjectName = att.subject.subjectName
-                    res.maxHours = att.subject.totalLectures
-                    res.absentHours = att.totalLecturesByFaculty - att.lectureAttended
-                    res.lectureAttended = att.lectureAttended
-                    res.totalLecturesByFaculty = att.totalLecturesByFaculty
-                    return res
-                })
+            let attendanceList = []
+            let classesAttended = 0
+            let totalClasses = 0
+            attendence.map(att => {
+                        let res = {};
+                        // res.studentName = student.name
+                        res.attendence = ((att.lectureAttended / att.totalLecturesByFaculty) * 100).toFixed(2)
+                        res.subjectCode = att.subject.subjectCode
+                        res.subjectName = att.subject.subjectName
+                        res.maxHours = att.subject.totalLectures
+                        res.absentHours = att.totalLecturesByFaculty - att.lectureAttended
+                        res.lectureAttended = att.lectureAttended
+                        classesAttended += att.lectureAttended
+                        totalClasses += att.totalLecturesByFaculty
+                        res.totalLecturesByFaculty = att.totalLecturesByFaculty
+                        attendanceList.push(res)
             })
+            let overallAttendance = ((classesAttended /totalClasses ) * 100).toFixed(2)
+            res.status(200).json({result:{
+                studentName,
+                attendanceList,
+                overallAttendance
+            }})
+
+            // res.status(200).json({
+            //     result: attendence.map(att => {
+            //         let res = {};
+            //         res.studentName = student.name
+            //         res.attendence = ((att.lectureAttended / att.totalLecturesByFaculty) * 100).toFixed(2)
+            //         res.subjectCode = att.subject.subjectCode
+            //         res.subjectName = att.subject.subjectName
+            //         res.maxHours = att.subject.totalLectures
+            //         res.absentHours = att.totalLecturesByFaculty - att.lectureAttended
+            //         res.lectureAttended = att.lectureAttended
+            //         res.totalLecturesByFaculty = att.totalLecturesByFaculty
+            //         return res
+            //     })
+            // })
+
         }
         catch (err) {
             console.log("Error in fetching attendence",err.message)
@@ -188,34 +215,30 @@ module.exports = {
    
     updateProfile: async (req, res, next) => {
         try {
-            const {email, gender, studentMobileNumber, fatherName,
-                fatherMobileNumber, aadharCard} = req.body
+            console.log("in cntrl")
+            console.log("req body",req.body)
+            const {email, gender, parentMobileNumber, name} = req.body
+            console.log("email gen mbno name",email,gender,parentMobileNumber,name)
             const userPostImg = await bufferConversion(req.file.originalname, req.file.buffer)
             const imgResponse = await cloudinary.uploader.upload(userPostImg)
-            const student = await Student.findOne({ email })
+            console.log("res is",imgResponse.secure_url)
+            const parent = await Parent.findOne({ email })
             if (gender) {
-                student.gender = gender
-                await student.save()
+                parent.gender = gender
+                await parent.save()
             }
-            if (studentMobileNumber) {
-                student.studentMobileNumber = studentMobileNumber
-                await student.save()
+            if (parentMobileNumber) {
+                parent.parentMobileNumber = parentMobileNumber
+                await parent.save()
             }
-            if (fatherName) {
-                student.fatherName = fatherName
-                await student.save()
+            if (name) {
+                parent.name = name
+                await parent.save()
             }
-            if (fatherMobileNumber) {
-                student.fatherMobileNumber = fatherMobileNumber
-                await student.save()
-            }
-            if (aadharCard) {
-                student.aadharCard = aadharCard
-                await student.save()
-            }
-                student.avatar = imgResponse.secure_url
-                await student.save()
-                res.status(200).json(student)
+       
+                parent.avatar = imgResponse.secure_url
+                await parent.save()
+                res.status(200).json(parent)
         }
         catch (err) {
             console.log("Error in updating Profile", err.message)

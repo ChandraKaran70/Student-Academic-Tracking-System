@@ -62,6 +62,7 @@ const FacultyMarkAttendance = (props) => {
         
     // }, [store.error, store.faculty.fetchedStudentsHelper])
 
+   
  
 
     const secondFormHandler = (e) => {

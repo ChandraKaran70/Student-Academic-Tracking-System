@@ -13,6 +13,7 @@ const validateSubjectRegisterInput = require('../validation/subjectRegister')
 
 //Models
 const Subject = require('../models/subject')
+const SubjectFaculty = require('../models/subjectfaculty')
 const Student = require('../models/student')
 const Faculty = require('../models/faculty')
 const Admin = require('../models/admin')
@@ -68,7 +69,7 @@ module.exports = {
             if (admins.length < 10) {
                 helper = "00" + admins.length.toString()
             }
-            else if (students.length < 100 && students.length > 9) {
+            else if (admins.length < 100 && admins.length > 9) {
                 helper = "0" + admins.length.toString()
             }
             else {
@@ -481,6 +482,23 @@ module.exports = {
         }
 
     },
+    getAllFacultyAndSubject: async (req, res, next) => {
+        try {
+            const faculties = await Faculty.find({},{_id:0,registrationNumber:true,name:true})
+            if (faculties.length === 0) {
+                return res.status(404).json({ message: "No Faculty Found" })
+            }
+            const subjects = await Subject.find({},{_id:0,subjectName:true})
+            if(subjects.length === 0){
+                return res.status(404).json({ message: "No Subject Found" })
+            }
+            res.status(200).json({ faculties: faculties,subjects:subjects })
+        }
+        catch (err) {
+            res.status(400).json({ message: `error in getting all faculties and subjects", ${err.message}` })
+        }
+
+    },
     addSubject: async (req, res, next) => {
         try {
             const { errors, isValid } = validateSubjectRegisterInput(req.body)
@@ -496,29 +514,40 @@ module.exports = {
                 errors.subjectCode = "Given Subject is already added"
                 return res.status(400).json(errors)
             }
+            // const newSubject = await new Subject({
+            //     totalLectures,
+            //     department,
+            //     subjectCode,
+            //     subjectName,
+            //     year,
+            //     registrationNumber,
+            //     semester
+            // })
+
             const newSubject = await new Subject({
                 totalLectures,
                 department,
                 subjectCode,
                 subjectName,
                 year,
-                registrationNumber,
                 semester
             })
+
             await newSubject.save()
-            const students = await Student.find({ department, year })
-            const faculties = await Faculty.find({ registrationNumber})
-            console.log("fac is",faculties)
-            if (faculties.length === 0) {
-                errors.faculty = "No faculty found for given subject"
-                return res.status(400).json(errors)
-            }
-            else{
-                for (var i = 0; i < faculties.length; i++) {
-                    faculties[i].subjectsCanTeach.push(newSubject._id)
-                    await faculties[i].save()
-                }
-            }
+            // const students = await Student.find({ department, year})
+            const students = await Student.find({ department, year,semester})
+            // const faculties = await Faculty.find({ registrationNumber})
+            // console.log("fac is",faculties)
+            // if (faculties.length === 0) {
+            //     errors.faculty = "No faculty found for given subject"
+            //     return res.status(400).json(errors)
+            // }
+            // else{
+            //     for (var i = 0; i < faculties.length; i++) {
+            //         faculties[i].subjectsCanTeach.push(newSubject._id)
+            //         await faculties[i].save()
+            //     }
+            // }
 
             if (students.length === 0) {
                 errors.department = "No branch found for given subject"
@@ -534,6 +563,37 @@ module.exports = {
         }
         catch (err) {
             console.log(`error in adding new subject", ${err.message}`)
+        }
+    },
+    assignFaculty: async (req, res, next) => {
+        try {
+            const { department,year,section,semester,subjectName,registrationNumber } = req.body
+            const faculty = await Faculty.findOne({registrationNumber:registrationNumber})
+            console.log("faculty is",faculty)
+            console.log("dept yr sec sem subnme",department,year,section,semester,subjectName)
+            const subject = await Subject.findOne({department:department,year:year,semester:semester,subjectName:subjectName})
+            const subjectfaculty = await SubjectFaculty.findOne({department:department,year:year,section:section,semester:semester,subjectName:subjectName})
+            if(subjectfaculty){
+                errors.subjectName = "Given Subject is already added faculty in selected class"
+                return res.status(400).json(errors)
+            }
+            const newSubjectFaculty = await SubjectFaculty({
+                department,
+                subjectName,
+                year,
+                section,
+                semester,
+                registrationNumber
+            })
+            faculty.subjectsCanTeach.push(subject._id)
+            subject.registrationNumber = registrationNumber
+            await newSubjectFaculty.save()
+            await subject.save()
+            await faculty.save()
+            res.status(200).json({faculty})
+        }
+        catch (err) {
+            console.log(`error in assigning new subject", ${err.message}`)
         }
     },
     getAllSubjects: async (req, res, next) => {

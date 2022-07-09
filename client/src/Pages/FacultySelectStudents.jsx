@@ -46,12 +46,12 @@ const FacultySelectStudents = ({AttendanceFlag}) => {
     //     setIsLoading(true)
     //     let registrationNumber = store.faculty.faculty.faculty.registrationNumber
     //     dispatch(fetchStudents(department, year, section,registrationNumber))
-       
+    //     console.log("heyyyyy")
     // }
+
     const formHandler = (e) => {
         e.preventDefault()
-        setIsLoading(true)
-       
+        setIsLoading(true)  
     }
 
     useEffect(()=>{
@@ -66,6 +66,7 @@ const FacultySelectStudents = ({AttendanceFlag}) => {
     }, [store.error, store.faculty.fetchedStudentsHelper])
 
  
+   
 
     // const secondFormHandler = (e) => {
     //     e.preventDefault()

@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-
-import { studentUpdate, studentLogout } from '../redux/action/studentAction'
-import HomeHelper from '../Components/HomeHelper'
+import { ParentUpdate ,parentLogout} from '../../redux/action/parentAction'
+import ParentHomeHelper from '../../Components/ParentHomeHelper'
 
 import { useHistory, withRouter } from 'react-router-dom'
 
-const StudentUpdateProfile = () => {
+const ParentUpdateProfile = () => {
     const store = useSelector((store) => store)
     const dispatch = useDispatch()
     const history = useHistory()
+    const [name,setName] = useState('')
     const [gender, setGender] = useState('')
-    const [studentMobileNumber, setContactNumber] = useState('')
-    const [fatherName, setFatherName] = useState('')
-    const [fatherMobileNumber, setFatherContactNumber] = useState('')
-    const [aadharCard, setAadharCard] = useState('')
+    const [parentMobileNumber, setContactNumber] = useState('')
     const [error, setError] = useState({})
     const [avatar, setAvatar] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -37,24 +34,21 @@ const StudentUpdateProfile = () => {
     const formHandler = async(e) => {
         e.preventDefault()
         const formData = new FormData()
+        formData.append("name",name)
         formData.append("gender", gender)
-        formData.append("studentMobileNumber", studentMobileNumber)
-        formData.append("fatherName", fatherName)
-        formData.append("fatherMobileNumber", fatherMobileNumber)
-        formData.append("aadharCard", aadharCard)
+        formData.append("parentMobileNumber", parentMobileNumber)
         formData.append("avatar", avatar)
-        formData.append("email", store.student.student.student.email)
-        console.log("frm data in student is",formData)
-        dispatch(studentUpdate(formData, history))
+        formData.append("email", store.parent.parent.parent.email)
+        dispatch(ParentUpdate(formData,history))
         setModal(true)
         alert("Kindly login again to see updates")
-        dispatch(studentLogout())
+        dispatch(parentLogout())
         history.push('/')
     }
         return (
             <div>
-                {store.student.isAuthenticated ? <>
-                    <HomeHelper />
+                {store.parent.isAuthenticated ? <>
+                    <ParentHomeHelper />
                     <div className="container mt-5">
                         <div className="row ">
                             <div className="col-md-5 w-100 m-auto">
@@ -62,6 +56,10 @@ const StudentUpdateProfile = () => {
                                     <div className="form-group">
                                         <label htmlFor="inputId">Profile Picture</label>
                                         <input required className="form-control" type="file" accept=".jpg,.png,.jpeg,.pdf" id="inputId" onChange={imagehandler}></input>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="fatherId">Name</label>
+                                        <input onChange={(e) => setName(e.target.value)} type="text" className="form-control" id="fatherId" />
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="genderId">Gender</label>
@@ -76,18 +74,9 @@ const StudentUpdateProfile = () => {
                                         <label htmlFor="numberId">Contact Number</label>
                                         <input onChange={(e) => setContactNumber(e.target.value)} required type="number" className="form-control" id="numberId" />
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="fatherId">Father Name</label>
-                                        <input onChange={(e) => setFatherName(e.target.value)} type="text" className="form-control" id="fatherId" />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="fathercnId">Father Contact Number</label>
-                                        <input onChange={(e) => setFatherContactNumber(e.target.value)} type="number" className="form-control" id="fathercnId" />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="aadharId">Aadhar Card Number</label>
-                                        <input onChange={(e) => setAadharCard(e.target.value)} type="number" className="form-control" id="aadharId" />
-                                    </div>
+                                 
+                                 
+                                 
                                     <button type="submit" className="btn btn-primary">Update</button>
                                 </form>
                             </div>
@@ -99,4 +88,4 @@ const StudentUpdateProfile = () => {
         )
     }
 
-export default withRouter(StudentUpdateProfile)
+export default withRouter(ParentUpdateProfile)

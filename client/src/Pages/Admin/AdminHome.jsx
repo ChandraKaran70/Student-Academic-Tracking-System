@@ -6,12 +6,14 @@ import { useEffect } from 'react';
 
 const AdminHome = () => {
     const store = useSelector((store) => store)
+
     useEffect(()=>{
         console.log("adm",store.admin)
         console.log("name",store.admin.admin.admin.name)
         console.log("dept",store.admin.admin.admin.department)
 
     },[])
+    
     const history = useHistory()
     return (
         <div>

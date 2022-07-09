@@ -26,11 +26,12 @@ const ChildTestPerformance = (props) => {
                 <ParentHomeHelper />
 
                 <div className="container">
-                    <h4>Marks report</h4><br/>
-                    <h5>Student Name: {store.parent.allMarks.studentName}</h5><br/><br/>
+                    
                     {store.parent.allMarks.Mid1 &&
                         <div className="row mt-3">
                             <div className="col-md-8 m-auto">
+                            <h4 style={{color:"green"}}>Marks report</h4><br/>
+                            <h5>Student Name: {store.parent.allMarks.studentName}</h5><br/><br/>
                                 {store.parent.allMarks.Mid1.length !== 0 ? <>
                                     <h4>Mid 1</h4>
                                     <table className="table border">

@@ -13,7 +13,7 @@ const ChildAttendancePage = (props) => {
 
     useEffect(() => {
         console.log("num is",studentRegistrationNumber)
-        console.log("child attendance in child page",store.parent.attendance)
+        console.log("child attendance in child page",store.parent.attendence)
     })
 
     useEffect(()=>{
@@ -24,9 +24,16 @@ const ChildAttendancePage = (props) => {
         <div>
             {store.parent.isAuthenticated ? <>
                 <ParentHomeHelper />
+                {store.parent.attendence?
                 <div className="container">
                     <div className="row mt-5">
                         <div className="col-md-6 m-auto">
+                        <h4 style={{color:"green"}}>Attendance report</h4><br/>
+                        <h5>Student Name: {store.parent.attendence.studentName}</h5><br/>
+                      {store.parent.attendence.overallAttendance > 75 ? <h5 style={{color:"green"}}>Attendance Percentage - {store.parent.attendence.overallAttendance} </h5>
+                       : <h5 style={{color:"red"}}>Attendance Percentage - {store.parent.attendence.overallAttendance} </h5> }
+                        <br/><br/>
+                        {store.parent.attendence.attendanceList ?  
                             <table className="table border">
                                 <thead>
                                     <tr>
@@ -42,7 +49,7 @@ const ChildAttendancePage = (props) => {
                                 </thead>
                                 <tbody>
                                     {
-                                        store.parent.attendence.map((res, index) =>
+                                       store.parent.attendence.attendanceList.map((res, index) =>
                                             <tr key={index}>
                                                 <th scope="row">{index + 1}</th>
                                                 <td>{res.subjectCode}</td>
@@ -56,11 +63,11 @@ const ChildAttendancePage = (props) => {
                                         )
                                     }
                                 </tbody>
-                            </table>
+                            </table> :<></>}
                         </div>
                     </div>
-                </div>
-            </> : (history.push('/'))}
+                </div>:<h1>Hiiii</h1>}
+            </> :  (history.push('/'))}
            
             
         </div>

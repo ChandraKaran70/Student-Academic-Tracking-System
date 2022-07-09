@@ -116,7 +116,7 @@ const AdminAddStudent = () => {
                                             {error.year && (<div className="invalid-feedback">{error.year}</div>)}
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="semesterId">Year</label>
+                                            <label htmlFor="semesterId">Semester</label>
                                             <select onChange={(e) => setSemester(e.target.value)} className={classnames("form-control",
                                                 {
                                                     'is-invalid': error.semester
@@ -129,12 +129,23 @@ const AdminAddStudent = () => {
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="sectionId">Section</label>
-                                            <input onChange={(e) => setSection(e.target.value)} type="text" className={classnames("form-control",
+                                            <select onChange={(e) => setSection(e.target.value)} className={classnames("form-control",
+                                                {
+                                                    'is-invalid': error.section
+                                                })} id="sectionId">
+                                                <option>Select</option>
+                                                <option value="A">A</option>
+                                                <option value="B">B</option>
+                                            </select>
+                                            {error.section && (<div className="invalid-feedback">{error.section}</div>)}
+                                            {/* <input onChange={(e) => setSection(e.target.value)} type="text" className={classnames("form-control",
                                                 {
                                                     'is-invalid': error.section
                                                 })} id="sectionId" />
                                             {error.section && (<div className="invalid-feedback">{error.section}</div>)}
-                                        </div>
+
+                                         */}
+                                         </div>
                                         <div class="form-group">
                                             <label htmlFor="dobId">DOB</label>
                                             <input onChange={(e) => setDob(e.target.value)} type="date" className={classnames("form-control",

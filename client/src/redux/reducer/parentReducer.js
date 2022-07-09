@@ -3,7 +3,7 @@ import isEmpty from '../validation/is-empty'
 const initialState = {
     isAuthenticated: false,
     parent: {},
-    attendence: [], 
+    attendence: {}, 
     allMarks: {},
     isStudentSelected:false,
     fetchedAttendanceHelper:false,

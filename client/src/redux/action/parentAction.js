@@ -138,6 +138,22 @@ export const getMarks = (registrationNumber) => {
     }
 }
 
+export const ParentUpdate = (updatedData) => {
+    return async () => {
+        try {
+            console.log("updateData",updatedData)
+            const { data } = await axios({
+                method: 'Post',
+                url: url + `/api/parent/updateProfile`,
+                data: updatedData
+            })
+        }
+        catch (err) {
+            console.log("Error in sending message", err.message)
+        }
+    }
+}
+
 export const parentLogout = () =>
     (dispatch) => {
         // Remove token from localStorage

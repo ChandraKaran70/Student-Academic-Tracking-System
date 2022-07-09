@@ -43,6 +43,13 @@ const adminAddSubjectFlag = (data) => {
     }
 }
 
+const adminAssignFacultyFlag = (data) => {
+    return {
+        type: "ADMIN_ASSIGN_FACULTY_FLAG",
+        payload: data
+    }
+}
+
 const adminAddAdminFlag = (data) => {
     return {
         type: "ADMIN_ADD_ADMIN_FLAG",
@@ -56,6 +63,7 @@ const getSubjctsHelper = (data) => {
         payload: data
     }
 }
+
 
 const adminGetAllFacultyHelper = (data) => {
     return {
@@ -215,6 +223,29 @@ export const adminAddSubject = (subjectCredential) => {
     }
 }
 
+export const adminAssignFaculty = (subjectCredential) => {
+    return async (dispatch) => {
+        try {
+            console.log("inside act")
+            const { data } = await axios({
+                method: 'Post',
+                url: url + "/api/admin/assignFaculty",
+                data: subjectCredential
+            })
+            dispatch(adminAssignFacultyFlag(true))
+            alert("Subject Assigned Added Successfully")
+        }
+        catch (err) {
+            dispatch({
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        }
+    }
+}
+
+
+
 
 export const adminAddAdmin = (adminCredentails) => {
     return async (dispatch) => {
@@ -277,6 +308,32 @@ export const adminGetAllFaculty = (department) => {
         }
     }
 }
+
+
+export const adminGetAllFacultyAndSubjects = () => {
+    return async (dispatch) => {
+        try {
+            console.log("in fac n sub act")
+            const { data } = await axios({
+                method: 'Get',
+                url: url + "/api/admin/getAllFacultyAndSubject",
+            })
+            console.log("returned",data)
+            dispatch({
+                type:"GET_ALL_FACULTY_AND_SUBJECTS",
+                faculties:data.faculties,
+                subjects:data.subjects
+            })
+        }
+        catch (err) {
+            dispatch({
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        }
+    }
+}
+
 
 export const adminGetAllStudent = (searchCredentials) => {
     return async (dispatch) => {

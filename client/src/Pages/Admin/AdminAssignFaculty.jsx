@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import classnames from 'classnames'
-import { adminAddSubject } from '../redux/action/adminAction'
-import AdminHomeHelper from '../Components/AdminHomeHelper'
+import { adminAssignFaculty,adminGetAllFacultyAndSubjects} from '../../redux/action/adminAction'
+import AdminHomeHelper from '../../Components/AdminHomeHelper'
 
-const AdminAddSubject = () => {
+const AdminAssignFaculty = () => {
     const store = useSelector((store) => store)
     const dispatch = useDispatch()
     const history = useHistory()
     const [subjectName, setSubjectName] = useState('')
     const [semester,setSemester] = useState('')
-    const [subjectCode, setSubjectCode] = useState('')
-    const [totalLectures, setTotalLectures] = useState('')
+    const [section,setSection] = useState('')
     const [department, setDepartment] = useState('')
     const [year, setYear] = useState('')
     const [ registrationNumber,setRegistrationNumber] = useState('')
@@ -25,64 +24,46 @@ const AdminAddSubject = () => {
             setError(store.error)
         }
     }, [store.error])
+
+
+    useEffect(()=>{
+        dispatch(adminGetAllFacultyAndSubjects())
+    },[])
+
     const formHandler = (e) => {
         e.preventDefault()
         setIsLoading(true)
-        dispatch(adminAddSubject({
-            subjectCode,
-            subjectName,
-            semester,
-            totalLectures,
+        dispatch(adminAssignFaculty({  
             department,
             year,
+            section,
+            semester,
+            subjectName,
             registrationNumber
         }))
     }
 
     useEffect(() => {
-        if (store.admin.adminAddSubjectFlag) {
+        if (store.admin.adminAssignFacultyFlag) {
             setError({})
         }
-    }, [store.admin.adminAddSubjectFlag])
+    }, [store.admin.adminAssignFacultyFlag])
 
     useEffect(() => {
-        if (store.error || store.admin.adminAddSubjectFlag) {
+        if (store.error || store.admin.adminAssignFacultyFlag) {
             setIsLoading(false)
         }
-    }, [store.error, store.admin.adminAddSubjectFlag])
+    }, [store.error, store.admin.adminAssignFacultyFlag])
 
     return (
         <div>
             {store.admin.isAuthenticated ? <> <AdminHomeHelper />
-                <div className="container mt-5">
+                { store.admin.adminFetchedSubjectFacultyHelper? <div className="container mt-5">
                     <div className="row justify-content-center">
                         <div className="col-md-4">
                             <div className="d-flex justify-content-md-center vh-100">
-                                <form noValidate onSubmit={formHandler}>
-                                    <div className="form-group">
-                                        <label htmlFor="snameId">Subject Name</label>
-                                        <input onChange={(e) => setSubjectName(e.target.value)} type="text" className={classnames("form-control",
-                                            {
-                                                'is-invalid': error.subjectName
-                                            })} id="snameId" />
-                                        {error.subjectName && (<div className="invalid-feedback">{error.subjectName}</div>)}
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="scodeId">Subject Code</label>
-                                        <input onChange={(e) => setSubjectCode(e.target.value)} type="text" className={classnames("form-control",
-                                            {
-                                                'is-invalid': error.subjectCode
-                                            })} id="scodeId" />
-                                        {error.subjectCode && (<div className="invalid-feedback">{error.subjectCode}</div>)}
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="totalLectures">Total Lectures</label>
-                                        <input onChange={(e) => setTotalLectures(e.target.value)} type="number" className={classnames("form-control",
-                                            {
-                                                'is-invalid': error.totalLectures
-                                            })} id="totalLectures" />
-                                        {error.totalLectures && (<div className="invalid-feedback">{error.totalLectures}</div>)}
-                                    </div>
+                                <form noValidate onSubmit={formHandler}>  
+                                    
                                     <div className="form-group">
                                         <label htmlFor="departmentId">Department</label>
                                         <select onChange={(e) => setDepartment(e.target.value)} className={classnames("form-control",
@@ -99,6 +80,7 @@ const AdminAddSubject = () => {
                                         </select>
                                         {error.department && (<div className="invalid-feedback">{error.department}</div>)}
                                     </div>
+
                                     <div className="form-group">
                                         <label htmlFor="yearId">Year</label>
                                         <select onChange={(e) => setYear(e.target.value)} className={classnames("form-control",
@@ -129,10 +111,61 @@ const AdminAddSubject = () => {
 
                                         {error.semester && (<div className="invalid-feedback">{error.semester}</div>)}
                                     </div>
+
                                     <div className="form-group">
+                                        <label htmlFor="sectionId">Section</label>
+                                        <select onChange={(e) => setSection(e.target.value)} className={classnames("form-control",
+                                            {
+                                                'is-invalid': error.semester
+
+                                            })} id="sectionId">
+                                            <option>Select</option>
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                        </select>
+
+                                        {error.section && (<div className="invalid-feedback">{error.section}</div>)}
+                                    </div>
+                                        {/* 
+                                    <div className="form-group">
+                                        <label htmlFor="snameId">Subject Name</label>
+                                        <input onChange={(e) => setSubjectName(e.target.value)} type="text" className={classnames("form-control",
+                                            {
+                                                'is-invalid': error.subjectName
+                                            })} id="snameId" />
+                                        {error.subjectName && (<div className="invalid-feedback">{error.subjectName}</div>)}
+                                    </div> */}
+
+                                <div className="form-group">
+                                    <label htmlFor="snameId">Subject Name</label>
+                                    <select required onChange={(e) => setSubjectName(e.target.value)} className="form-control" id="snameId">
+                                        <option>Select</option>
+                                        {
+                                            store.admin.subjectList.map(subject =>
+                                                <option>{subject.subjectName}</option>
+                                            )
+                                        }
+                                    </select>
+                                </div>
+
+                                    {/* <div className="form-group">
                                             <label htmlFor="fac">Faculty</label>
                                             <input onChange={(e) => setRegistrationNumber(e.target.value)} type="text" className="form-control" id="facId" />
-                                        </div>
+                                    </div> */}
+                                
+                                <div className="form-group">
+                                    <label htmlFor="faculty">Faculty</label>
+                                    <select required onChange={(e) => setRegistrationNumber(e.target.value)} className="form-control" id="facId">
+                                        <option>Select</option>
+                                        {
+                                            store.admin.facultyList.map(faculty =>
+                                                <option value={faculty.registrationNumber}>{faculty.name}-{faculty.registrationNumber}</option>
+                                            )
+                                        }
+                                    </select>
+                                </div>
+
+
                                     <div class="row justify-content-center">
                                         <div class="col-md-1">
                                             {
@@ -149,9 +182,9 @@ const AdminAddSubject = () => {
                             </div>
                         </div>
                     </div>
-                </div></>: (history.push('/'))}
+                </div>:<></>}</>: (history.push('/'))}
         </div>
     )
 }
 
-export default AdminAddSubject
+export default AdminAssignFaculty

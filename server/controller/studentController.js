@@ -42,9 +42,9 @@ module.exports = {
         }
         const payload = { id: student.id, student };
         console.log("hiiiii in student cntrlr")
-        console.log(student.department,student.year,student.section,student.semester)
-        const studentTimetable = await Timetable.findOne({department:student.department,year:student.year,semester:student.semester,section:student.section})
-        console.log("student timetable is",studentTimetable)
+        // console.log(student.department,student.year,student.section,student.semester)
+        // const studentTimetable = await Timetable.findOne({department:student.department,year:student.year,semester:student.semester,section:student.section})
+        // console.log("student timetable is",studentTimetable)
         jwt.sign(
             payload,
             keys.secretOrKey,
@@ -383,6 +383,7 @@ module.exports = {
         try {
             const {email, gender, studentMobileNumber, fatherName,
                 fatherMobileNumber, aadharCard} = req.body
+                console.log("email gen mbno name",email,gender,studentMobileNumber)
             const userPostImg = await bufferConversion(req.file.originalname, req.file.buffer)
             const imgResponse = await cloudinary.uploader.upload(userPostImg)
             console.log("res is",imgResponse.secure_url)
@@ -420,7 +421,7 @@ module.exports = {
             const { department, year } = req.user;
             const subjects = await Subject.find({ department, year })
             if (subjects.length === 0) {
-                return res.status(404).json({ message: "No subjects founds" })
+                return res.status(404).json({ message: "No subjects found" })
             }
             res.status(200).json({result: subjects })
         }
@@ -433,7 +434,6 @@ module.exports = {
             console.log("req.user",req.user)
             const {department, year, id} = req.user
             const getMarks = await Mark.find({ department, student: id }).populate('subject')
-            console.log("getMarks",getMarks)
           
             const Mid1 = getMarks.filter((obj) => {
                 return obj.exam === "Mid 1"

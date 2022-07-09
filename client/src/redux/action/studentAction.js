@@ -91,8 +91,6 @@ const fetchSubjectAttendenceHelper = (data) => {
 }
 
 
-
-
 const getMarksHelper = (data) => {
     return {
         type: "GET_MARKS",
@@ -126,7 +124,7 @@ export const studentLogin = (studentCredential) => {
         }
         catch (err) {
             dispatch({
-                type: SET_ERRORS_HELPER,
+                type: SET_ERRORS,
                 payload: err.response.data
             })
         }
@@ -331,6 +329,7 @@ export const newerChats = (receiverName) => {
 export const studentUpdate = (updatedData) => {
     return async () => {
         try {
+            console.log("student update",updatedData)
             const { data } = await axios({
                 method: 'Post',
                 url: url + `/api/student/updateProfile`,

@@ -7,7 +7,9 @@ import { useEffect } from 'react';
 const ParentHome = () => {
     const store = useSelector((store) => store)
    
-
+    useEffect(()=>{
+        console.log("parent is",store.parent)
+    })
     const history = useHistory()
     return (
         <div>

@@ -82,7 +82,7 @@ const SectionMarks = (props) => {
                             </table>
                         </div>
                     </div>
-                </div>:<></>}
+                </div>:<h2 style={{marginLeft:"250px",marginTop:"100px"}}>Loading...</h2>}
             </> : (history.push('/'))}
            
             

@@ -28,6 +28,7 @@ const AdminAddAdmin = () => {
             setError({})
         }
     }, [store.error])
+    
     const formHandler = (e) => {
         e.preventDefault()
         setIsLoading(true)

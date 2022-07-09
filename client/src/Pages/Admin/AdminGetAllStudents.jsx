@@ -12,6 +12,7 @@ const AdminGetAllFaculty = () => {
     const [year, setYear] = useState('')
     const [section, setSection] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [flag,setFlag] =useState(false)
     
     
 
@@ -23,6 +24,8 @@ const AdminGetAllFaculty = () => {
         e.preventDefault()
         setIsLoading(true)
         dispatch(adminGetAllStudent({ department, year,section }))
+        setFlag(true)
+        setIsLoading(false) 
     }
 
     useEffect(() => {
@@ -81,7 +84,9 @@ const AdminGetAllFaculty = () => {
                                         
                                     </select>
                                     {error.section && (<div className="invalid-feedback">{error.section}</div>)}
+                                
                                 </div>
+                                <button type="submit" className="btn btn-info btn-block  ">Search</button><br/>
                                 <div class="row justify-content-center">
                                     <div class="col-md-1">
                                         {
@@ -91,7 +96,7 @@ const AdminGetAllFaculty = () => {
                                         }
                                     </div>
                                 </div>
-                                {!isLoading && <button type="submit" className="btn btn-info btn-block  ">Search</button>}
+                                 
                               
                                
                             </form>
@@ -100,7 +105,7 @@ const AdminGetAllFaculty = () => {
                         </div>
                         <div className="col-md-8">
 
-                            {store.admin.allStudent.length !== 0 && <table className="table border">
+                            {store.admin.allStudent.length !== 0 ? <table className="table border">
                                 <thead>
                                     <tr>
                                         <th scope="col">S.No</th>
@@ -123,7 +128,8 @@ const AdminGetAllFaculty = () => {
                                         )
                                     }
                                 </tbody>
-                            </table>}
+                            </table>
+                            : flag? <h2 style={{color:"red",marginLeft:"250px",marginTop:"100px"}}>No details found</h2>:<></>}
 
                         </div>
                     </div>

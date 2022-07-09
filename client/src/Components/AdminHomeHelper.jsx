@@ -15,6 +15,7 @@ const Home = () => {
     }, [store.admin.admin.name])
     const history = useHistory()
     const dispatch = useDispatch()
+    
     const logoutHandler = () => {
         dispatch(adminLogout())
         history.push('/')
@@ -34,6 +35,9 @@ const Home = () => {
                         </li>
                         <li className="nav-item">
                             <button type="button" className="btn"><Link to="/admin/addFaculty"><li>ADD FACULTY</li></Link></button>
+                        </li>
+                        <li className="nav-item">
+                            <button type="button" className="btn"><Link to="/admin/assignFaculty"><li>ASSIGN FACULTY</li></Link></button>
                         </li>
                         <li className="nav-item">
                             <button type="button" className="btn"><Link to="/admin/addStudent"><li>ADD STUDENT</li></Link></button>

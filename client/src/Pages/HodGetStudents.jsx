@@ -12,6 +12,7 @@ const HodGetStudents = ()=>{
     const [section, setSection] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState({})
+    const [flag,setFlag] = useState(false)
     const history = useHistory()
  
     const formHandler = (e) => {
@@ -19,6 +20,8 @@ const HodGetStudents = ()=>{
         setIsLoading(true)
         const department = store.faculty.faculty.faculty.department
         dispatch(hodGetAllStudent({ department, year,section }))
+        setIsLoading(false)
+        setFlag(true)
     }
 
 
@@ -65,6 +68,7 @@ const HodGetStudents = ()=>{
                                     </select>
                                     {error.section && (<div className="invalid-feedback">{error.section}</div>)}
                                 </div>
+                                <button type="submit" className="btn btn-info btn-block  ">Search</button><br/>
                                 <div class="row justify-content-center">
                                     <div class="col-md-1">
                                         {
@@ -74,7 +78,7 @@ const HodGetStudents = ()=>{
                                         }
                                     </div>
                                 </div>
-                                {!isLoading && <button type="submit" className="btn btn-info btn-block  ">Search</button>}
+                               
                               
                                
                             </form>
@@ -83,7 +87,7 @@ const HodGetStudents = ()=>{
                         </div>
                         <div className="col-md-8">
 
-                            {store.faculty.hodFetchedStudents.length !== 0 && <table className="table border">
+                            {store.faculty.hodFetchedStudents.length !== 0 ? <table className="table border">
                                 <thead>
                                     <tr>
                                         <th scope="col">S.No</th>
@@ -106,7 +110,7 @@ const HodGetStudents = ()=>{
                                         )
                                     }
                                 </tbody>
-                            </table>}
+                            </table>:flag? <h2 style={{color:"red",marginLeft:"250px",marginTop:"100px"}}>No details found</h2>:<></>}
 
                         </div>
                     </div>
